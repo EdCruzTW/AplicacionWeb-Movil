@@ -24,28 +24,26 @@ export class MaestrosScreenComponent implements OnInit {
   displayedColumns: string[] = ['id_trabajador', 'nombre', 'apellidos', 'email', 'fecha_nacimiento', 'telefono', 'rfc', 'cubiculo', 'area_investigacion', 'editar', 'eliminar'];
   dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-
-    // Configurar el accessor del sort para que funcione con las columnas personalizadas
+    //Configurar el accessor del sort para mapear columnas personalizadas
     this.dataSource.sortingDataAccessor = (item: any, property) => {
       switch(property) {
-        case 'nombre': return item.first_name;
-        case 'apellidos': return item.last_name;
+        case 'nombre': return item.first_name?.toLowerCase() || '';
+        case 'apellidos': return item.last_name?.toLowerCase() || '';
+        case 'id_trabajador': return item.id_trabajador;
         default: return item[property];
       }
     };
 
-    // Configurar filtro personalizado para buscar solo por id, nombre y apellidos
+    //Configurar filtro personalizado para buscar solo por id, nombre y apellidos
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       const searchStr = filter.toLowerCase();
-      return data.id_trabajador.toString().toLowerCase().includes(searchStr) ||
-             data.first_name.toLowerCase().includes(searchStr) ||
-             data.last_name.toLowerCase().includes(searchStr);
+      return data.id_trabajador?.toString().toLowerCase().includes(searchStr) ||
+             data.first_name?.toLowerCase().includes(searchStr) ||
+             data.last_name?.toLowerCase().includes(searchStr);
     };
   }
 
@@ -60,13 +58,10 @@ export class MaestrosScreenComponent implements OnInit {
     this.name_user = this.facadeService.getUserCompleteName();
     this.rol = this.facadeService.getUserGroup();
     //Validar que haya inicio de sesión
-    //Obtengo el token del login
     this.token = this.facadeService.getSessionToken();
-    console.log("Token: ", this.token);
     if(this.token == ""){
       this.router.navigate(["/"]);
     }
-    //Obtener maestros
     this.obtenerMaestros();
   }
 
@@ -76,7 +71,6 @@ export class MaestrosScreenComponent implements OnInit {
     this.maestrosService.obtenerListaMaestros().subscribe(
       (response) => {
         this.lista_maestros = response;
-        console.log("Lista users: ", this.lista_maestros);
         if (this.lista_maestros.length > 0) {
           //Agregar datos del nombre e email
           this.lista_maestros.forEach(usuario => {
@@ -84,13 +78,15 @@ export class MaestrosScreenComponent implements OnInit {
             usuario.last_name = usuario.user.last_name;
             usuario.email = usuario.user.email;
           });
-          console.log("Maestros: ", this.lista_maestros);
 
-          // Solo actualizar los datos, no crear un nuevo dataSource
+          //Actualizar los datos del dataSource
           this.dataSource.data = this.lista_maestros;
+          setTimeout(() => {
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+          });
         }
       }, (error) => {
-        console.error("Error al obtener la lista de maestros: ", error);
         alert("No se pudo obtener la lista de maestros");
       }
     );
@@ -106,31 +102,29 @@ export class MaestrosScreenComponent implements OnInit {
     }
   }
 
+  //Navegar a la vista de edición de maestro
   public goEditar(idUser: number) {
     this.router.navigate(["registro-usuarios/maestro/" + idUser]);
   }
 
+  //Eliminar maestro
   public delete(idUser: number) {
-    // Administrador puede eliminar cualquier maestro
-    // Maestro solo puede eliminar su propio registro
+    //Administrador puede eliminar cualquier maestro
+    //Maestro solo puede eliminar su propio registro
     const userId = Number(this.facadeService.getUserId());
     if (this.rol === 'administrador' || (this.rol === 'maestro' && userId === idUser)) {
-      //Si es administrador o es maestro, es decir, cumple la condición, se puede eliminar
       const dialogRef = this.dialog.open(EliminarUserModalComponent,{
-        data: {id: idUser, rol: 'maestro'}, //Se pasan valores a través del componente (ID a eliminar)
+        data: {id: idUser, rol: 'maestro'},
         height: '288px',
         width: '328px',
       });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result.isDelete){
-        console.log("Maestro eliminado");
         alert("Maestro eliminado correctamente.");
-        //Recargar página
         window.location.reload();
       }else{
         alert("Maestro no se ha podido eliminar.");
-        console.log("No se eliminó el maestro");
       }
     });
     }else{

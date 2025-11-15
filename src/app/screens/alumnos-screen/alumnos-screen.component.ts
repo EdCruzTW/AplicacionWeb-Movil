@@ -23,28 +23,26 @@ export class AlumnosScreenComponent implements OnInit {
   displayedColumns: string[] = ['matricula', 'nombre', 'apellidos', 'email', 'fecha_nacimiento', 'telefono', 'rfc', 'edad', 'ocupacion', 'editar', 'eliminar'];
   dataSource = new MatTableDataSource<DatosUsuario>(this.lista_alumnos as DatosUsuario[]);
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-
-    // Configurar el accessor del sort para que funcione con las columnas personalizadas
+    //Configurar el accessor del sort para mapear columnas personalizadas
     this.dataSource.sortingDataAccessor = (item: any, property) => {
       switch(property) {
-        case 'nombre': return item.first_name;
-        case 'apellidos': return item.last_name;
+        case 'nombre': return item.first_name?.toLowerCase() || '';
+        case 'apellidos': return item.last_name?.toLowerCase() || '';
+        case 'matricula': return item.matricula;
         default: return item[property];
       }
     };
 
-    // Configurar filtro personalizado para buscar solo por matrícula, nombre y apellidos
+    //Configurar filtro personalizado para buscar solo por matrícula, nombre y apellidos
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       const searchStr = filter.toLowerCase();
-      return data.matricula.toString().toLowerCase().includes(searchStr) ||
-             data.first_name.toLowerCase().includes(searchStr) ||
-             data.last_name.toLowerCase().includes(searchStr);
+      return data.matricula?.toString().toLowerCase().includes(searchStr) ||
+             data.first_name?.toLowerCase().includes(searchStr) ||
+             data.last_name?.toLowerCase().includes(searchStr);
     };
   }
 
@@ -59,13 +57,10 @@ export class AlumnosScreenComponent implements OnInit {
     this.name_user = this.facadeService.getUserCompleteName();
     this.rol = this.facadeService.getUserGroup();
     //Validar que haya inicio de sesión
-    //Obtengo el token del login
     this.token = this.facadeService.getSessionToken();
-    console.log("Token: ", this.token);
     if(this.token == ""){
       this.router.navigate(["/"]);
     }
-    //Obtener alumnos
     this.obtenerAlumnos();
   }
 
@@ -75,7 +70,6 @@ export class AlumnosScreenComponent implements OnInit {
     this.alumnosService.obtenerListaAlumnos().subscribe(
       (response) => {
         this.lista_alumnos = response;
-        console.log("Lista users: ", this.lista_alumnos);
         if (this.lista_alumnos.length > 0) {
           //Agregar datos del nombre e email
           this.lista_alumnos.forEach(usuario => {
@@ -83,13 +77,15 @@ export class AlumnosScreenComponent implements OnInit {
             usuario.last_name = usuario.user.last_name;
             usuario.email = usuario.user.email;
           });
-          console.log("Alumnos: ", this.lista_alumnos);
 
-          // Solo actualizar los datos, no crear un nuevo dataSource
+          //Actualizar los datos del dataSource
           this.dataSource.data = this.lista_alumnos;
+          setTimeout(() => {
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+          });
         }
       }, (error) => {
-        console.error("Error al obtener la lista de alumnos: ", error);
         alert("No se pudo obtener la lista de alumnos");
       }
     );
@@ -105,31 +101,29 @@ export class AlumnosScreenComponent implements OnInit {
     }
   }
 
+  //Navegar a la vista de edición de alumno
   public goEditar(idUser: number) {
     this.router.navigate(["registro-usuarios/alumno/" + idUser]);
   }
 
+  //Eliminar alumno
   public delete(idUser: number) {
-    // Administrador puede eliminar cualquier alumno
-    // Alumno solo puede eliminar su propio registro
+    //Administrador puede eliminar cualquier alumno
+    //Alumno solo puede eliminar su propio registro
     const userId = Number(this.facadeService.getUserId());
     if (this.rol === 'administrador' || (this.rol === 'alumno' && userId === idUser)) {
-      //Si es administrador o es alumno, es decir, cumple la condición, se puede eliminar
       const dialogRef = this.dialog.open(EliminarUserModalComponent,{
-        data: {id: idUser, rol: 'alumno'}, //Se pasan valores a través del componente (ID a eliminar)
+        data: {id: idUser, rol: 'alumno'},
         height: '288px',
         width: '328px',
       });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result.isDelete){
-        console.log("Alumno eliminado");
         alert("Alumno eliminado correctamente.");
-        //Recargar página
         window.location.reload();
       }else{
         alert("Alumno no se ha podido eliminar.");
-        console.log("No se eliminó el alumno");
       }
     });
     }else{
