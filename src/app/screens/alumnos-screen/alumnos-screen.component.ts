@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { FacadeService } from 'src/app/services/facade.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,13 +20,32 @@ export class AlumnosScreenComponent implements OnInit {
   public lista_alumnos: any[] = [];
 
   //Para la tabla
-  displayedColumns: string[] = ['matricula', 'nombre', 'email', 'fecha_nacimiento', 'telefono', 'rfc', 'edad', 'ocupacion', 'editar', 'eliminar'];
+  displayedColumns: string[] = ['matricula', 'nombre', 'apellidos', 'email', 'fecha_nacimiento', 'telefono', 'rfc', 'edad', 'ocupacion', 'editar', 'eliminar'];
   dataSource = new MatTableDataSource<DatosUsuario>(this.lista_alumnos as DatosUsuario[]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    // Configurar el accessor del sort para que funcione con las columnas personalizadas
+    this.dataSource.sortingDataAccessor = (item: any, property) => {
+      switch(property) {
+        case 'nombre': return item.first_name;
+        case 'apellidos': return item.last_name;
+        default: return item[property];
+      }
+    };
+
+    // Configurar filtro personalizado para buscar solo por matrícula, nombre y apellidos
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const searchStr = filter.toLowerCase();
+      return data.matricula.toString().toLowerCase().includes(searchStr) ||
+             data.first_name.toLowerCase().includes(searchStr) ||
+             data.last_name.toLowerCase().includes(searchStr);
+    };
   }
 
   constructor(
@@ -65,14 +85,24 @@ export class AlumnosScreenComponent implements OnInit {
           });
           console.log("Alumnos: ", this.lista_alumnos);
 
-          this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_alumnos as DatosUsuario[]);
-          this.dataSource.paginator = this.paginator;
+          // Solo actualizar los datos, no crear un nuevo dataSource
+          this.dataSource.data = this.lista_alumnos;
         }
       }, (error) => {
         console.error("Error al obtener la lista de alumnos: ", error);
         alert("No se pudo obtener la lista de alumnos");
       }
     );
+  }
+
+  // Función para aplicar el filtro
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   public goEditar(idUser: number) {

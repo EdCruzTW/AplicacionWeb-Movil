@@ -20,58 +20,75 @@
         </div>
         <!-- Colocamos la tabla de maestros -->
         <ng-container *ngIf="lista_maestros.length > 0; else noData">
+          <!-- Campo de búsqueda/filtrado -->
+          <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 20px;">
+            <mat-label>Buscar por ID, Nombre o Apellidos</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ej. Juan" #input>
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
           <div class="table-scroll-wrapper">
             <div class="mat-elevation-z8">
-              <table mat-table [dataSource]="dataSource" style="min-width: 1200px; width: 100%;">
-                <!-- 1era columna -->
+              <table mat-table [dataSource]="dataSource" matSort style="min-width: 1200px; width: 100%;">
+                <!-- 1era columna - Con sorting -->
                 <ng-container matColumnDef="id_trabajador">
-                    <th mat-header-cell *matHeaderCellDef> ID trabajador </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> ID trabajador </th>
                     <td mat-cell *matCellDef="let element"> {{element.id_trabajador}} </td>
                 </ng-container>
 
-                <!-- 2da columna -->
+                <!-- 2da columna - Nombre con sorting -->
                 <ng-container matColumnDef="nombre">
-                    <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                    <td mat-cell *matCellDef="let element"> {{element.first_name}} {{element.last_name}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar por nombre">
+                      Nombre
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.first_name}} </td>
                 </ng-container>
 
-                <!-- 3era columna -->
+                <!-- 3era columna - Apellidos con sorting -->
+                <ng-container matColumnDef="apellidos">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar por apellidos">
+                      Apellidos
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.last_name}} </td>
+                </ng-container>
+
+                <!-- 4ta columna - Email (sin sorting) -->
                 <ng-container matColumnDef="email">
                   <th mat-header-cell *matHeaderCellDef> Correo electrónico </th>
                   <td mat-cell *matCellDef="let element"> {{element.email}} </td>
                 </ng-container>
 
-                <!-- 4ta columna -->
+                <!-- 5ta columna -->
                 <ng-container matColumnDef="fecha_nacimiento">
                     <th mat-header-cell *matHeaderCellDef> Fecha nacimiento </th>
                     <td mat-cell *matCellDef="let element"> {{element.fecha_nacimiento | date: 'dd/MM/yyyy':'UTC'}} </td>
                 </ng-container>
 
-                <!-- 5ta columna -->
+                <!-- 6ta columna -->
                 <ng-container matColumnDef="telefono">
                   <th mat-header-cell *matHeaderCellDef> Teléfono </th>
                   <td mat-cell *matCellDef="let element"> {{element.telefono}} </td>
                 </ng-container>
 
-                <!-- 6ta columna -->
+                <!-- 7ma columna -->
                 <ng-container matColumnDef="rfc">
                     <th mat-header-cell *matHeaderCellDef> RFC </th>
                     <td mat-cell *matCellDef="let element"> {{element.rfc}} </td>
                 </ng-container>
 
-                <!-- 7ma columna -->
+                <!-- 8va columna -->
                 <ng-container matColumnDef="cubiculo">
                     <th mat-header-cell *matHeaderCellDef> Cubículo </th>
                     <td mat-cell *matCellDef="let element"> {{element.cubiculo}} </td>
                 </ng-container>
 
-                <!-- 8va columna -->
+                <!-- 9va columna -->
                 <ng-container matColumnDef="area_investigacion">
                   <th mat-header-cell *matHeaderCellDef> Área de investigación </th>
                   <td mat-cell *matCellDef="let element"> {{element.area_investigacion}} </td>
                 </ng-container>
 
-                <!-- 9a columna - Editar -->
+                <!-- 10a columna - Editar -->
                 <ng-container matColumnDef="editar">
                   <th mat-header-cell *matHeaderCellDef> Actualizar </th>
                   <td mat-cell *matCellDef="let element" class="td-editar">
@@ -79,7 +96,7 @@
                   </td>
                 </ng-container>
 
-                <!-- 10a columna - Eliminar -->
+                <!-- 11a columna - Eliminar -->
                 <ng-container matColumnDef="eliminar">
                   <th mat-header-cell *matHeaderCellDef> Eliminar </th>
                   <td mat-cell *matCellDef="let element" class="td-eliminar">

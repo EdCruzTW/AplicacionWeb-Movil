@@ -27,6 +27,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatSortModule} from '@angular/material/sort';
 
 // Paginación
 import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
@@ -84,6 +85,7 @@ import { EliminarUserModalComponent } from './modals/eliminar-user-modal/elimina
     MatButtonModule,
     MatTableModule,
     MatPaginatorModule,
+    MatSortModule,
     MatSidenavModule,
     MatDialogModule
   ],

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MaestrosService } from 'src/app/services/maestros.service';
@@ -20,13 +21,32 @@ export class MaestrosScreenComponent implements OnInit {
   public lista_maestros: any[] = [];
 
   //Para la tabla
-  displayedColumns: string[] = ['id_trabajador', 'nombre', 'email', 'fecha_nacimiento', 'telefono', 'rfc', 'cubiculo', 'area_investigacion', 'editar', 'eliminar'];
+  displayedColumns: string[] = ['id_trabajador', 'nombre', 'apellidos', 'email', 'fecha_nacimiento', 'telefono', 'rfc', 'cubiculo', 'area_investigacion', 'editar', 'eliminar'];
   dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    // Configurar el accessor del sort para que funcione con las columnas personalizadas
+    this.dataSource.sortingDataAccessor = (item: any, property) => {
+      switch(property) {
+        case 'nombre': return item.first_name;
+        case 'apellidos': return item.last_name;
+        default: return item[property];
+      }
+    };
+
+    // Configurar filtro personalizado para buscar solo por id, nombre y apellidos
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const searchStr = filter.toLowerCase();
+      return data.id_trabajador.toString().toLowerCase().includes(searchStr) ||
+             data.first_name.toLowerCase().includes(searchStr) ||
+             data.last_name.toLowerCase().includes(searchStr);
+    };
   }
 
   constructor(
@@ -66,13 +86,24 @@ export class MaestrosScreenComponent implements OnInit {
           });
           console.log("Maestros: ", this.lista_maestros);
 
-          this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
+          // Solo actualizar los datos, no crear un nuevo dataSource
+          this.dataSource.data = this.lista_maestros;
         }
       }, (error) => {
         console.error("Error al obtener la lista de maestros: ", error);
         alert("No se pudo obtener la lista de maestros");
       }
     );
+  }
+
+  // Función para aplicar el filtro
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   public goEditar(idUser: number) {
