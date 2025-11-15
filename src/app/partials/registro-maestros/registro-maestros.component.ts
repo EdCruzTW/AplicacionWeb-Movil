@@ -58,11 +58,27 @@ export class RegistroMaestrosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.maestro = this.maestrosService.esquemaMaestro();
-    // Rol del usuario
-    this.maestro.rol = this.rol;
+    //El primer if valida si existe un parámetro en la URL
+    if(this.activatedRoute.snapshot.params['id'] != undefined){
+      this.editar = true;
+      //Asignamos a nuestra variable global el valor del ID que viene por la URL
+      this.idUser = this.activatedRoute.snapshot.params['id'];
+      console.log("ID User: ", this.idUser);
+      //Al iniciar la vista asignamos los datos del user
+      this.maestro = this.datos_user;
+    }else{
+      // Si no va a this.editar, entonces inicializamos el JSON para registro nuevo
+      this.maestro = this.maestrosService.esquemaMaestro();
+      this.maestro.rol = this.rol;
+      this.token = this.facadeService.getSessionToken();
+    }
+    //Imprimir datos en consola
+    console.log("Maestro: ", this.maestro);
+    // this.maestro = this.maestrosService.esquemaMaestro();
+    // // Rol del usuario
+    // this.maestro.rol = this.rol;
 
-    console.log("Datos maestro: ", this.maestro);
+    // console.log("Datos maestro: ", this.maestro);
   }
 
   public regresar(){
