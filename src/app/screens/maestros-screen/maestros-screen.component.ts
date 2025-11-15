@@ -76,7 +76,7 @@ export class MaestrosScreenComponent implements OnInit {
   }
 
   public goEditar(idUser: number) {
-    this.router.navigate(["registro-usuarios/maestros/" + idUser]);
+    this.router.navigate(["registro-usuarios/maestro/" + idUser]);
   }
 
   public delete(idUser: number) {
@@ -86,7 +86,7 @@ export class MaestrosScreenComponent implements OnInit {
     if (this.rol === 'administrador' || (this.rol === 'maestro' && userId === idUser)) {
       //Si es administrador o es maestro, es decir, cumple la condición, se puede eliminar
       const dialogRef = this.dialog.open(EliminarUserModalComponent,{
-        data: {id: userId, rol: 'maestro'}, //Se pasan valores a través del componente
+        data: {id: idUser, rol: 'maestro'}, //Se pasan valores a través del componente (ID a eliminar)
         height: '288px',
         width: '328px',
       });

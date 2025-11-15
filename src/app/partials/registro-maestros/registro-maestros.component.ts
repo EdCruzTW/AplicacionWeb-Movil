@@ -66,6 +66,11 @@ export class RegistroMaestrosComponent implements OnInit {
       console.log("ID User: ", this.idUser);
       //Al iniciar la vista asignamos los datos del user
       this.maestro = this.datos_user;
+
+      // Asegurar que materias_json sea un array (por si acaso)
+      if(!Array.isArray(this.maestro.materias_json)){
+        this.maestro.materias_json = [];
+      }
     }else{
       // Si no va a this.editar, entonces inicializamos el JSON para registro nuevo
       this.maestro = this.maestrosService.esquemaMaestro();
@@ -119,7 +124,26 @@ export class RegistroMaestrosComponent implements OnInit {
     }
   }
   public actualizar(){
-
+    // Validación de los datos
+    this.errors = {};
+    this.errors = this.maestrosService.validarMaestro(this.maestro, this.editar);
+    if(Object.keys(this.errors).length > 0){
+      return false;
+    }
+    // Ejecutamos el servicio de actualización
+    this.maestrosService.actualizarMaestro(this.maestro).subscribe(
+      (response) => {
+        // Redirigir o mostrar mensaje de éxito
+        alert("Maestro actualizado exitosamente");
+        console.log("Maestro actualizado: ", response);
+        this.router.navigate(["maestros"]);
+      },
+      (error) => {
+        // Manejar errores de la API
+        alert("Error al actualizar maestro");
+        console.error("Error al actualizar maestro: ", error);
+      }
+    );
   }
 
   //Funciones para password
@@ -160,6 +184,12 @@ export class RegistroMaestrosComponent implements OnInit {
   // Funciones para los checkbox
   public checkboxChange(event:any){
     console.log("Evento: ", event);
+
+    // Asegurar que materias_json sea un array
+    if(!Array.isArray(this.maestro.materias_json)){
+      this.maestro.materias_json = [];
+    }
+
     if(event.checked){
       this.maestro.materias_json.push(event.source.value)
     }else{
@@ -174,7 +204,7 @@ export class RegistroMaestrosComponent implements OnInit {
   }
 
   public revisarSeleccion(nombre: string){
-    if(this.maestro.materias_json){
+    if(this.maestro.materias_json && Array.isArray(this.maestro.materias_json)){
       var busqueda = this.maestro.materias_json.find((element)=>element==nombre);
       if(busqueda != undefined){
         return true;

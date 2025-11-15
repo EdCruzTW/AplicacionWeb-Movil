@@ -182,6 +182,6 @@ export class AlumnosService {
     } else {
       headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     }
-    return this.http.delete<any>(`${environment.url_api}/alumnos/${idAlumno}/`, { headers });
+    return this.http.delete<any>(`${environment.url_api}/alumnos/?id=${idAlumno}`, { headers });
   }
 }

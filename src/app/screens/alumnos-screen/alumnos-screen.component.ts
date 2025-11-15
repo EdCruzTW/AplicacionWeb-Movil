@@ -86,7 +86,7 @@ export class AlumnosScreenComponent implements OnInit {
     if (this.rol === 'administrador' || (this.rol === 'alumno' && userId === idUser)) {
       //Si es administrador o es alumno, es decir, cumple la condición, se puede eliminar
       const dialogRef = this.dialog.open(EliminarUserModalComponent,{
-        data: {id: userId, rol: 'alumno'}, //Se pasan valores a través del componente
+        data: {id: idUser, rol: 'alumno'}, //Se pasan valores a través del componente (ID a eliminar)
         height: '288px',
         width: '328px',
       });
