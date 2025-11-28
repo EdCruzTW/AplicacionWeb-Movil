@@ -6,7 +6,6 @@ import { MatRadioChange } from '@angular/material/radio';
 import { AdministradoresService } from '../../services/administradores.service';
 import { MaestrosService } from '../../services/maestros.service';
 import { AlumnosService } from '../../services/alumnos.service';
-import { AdministradoresService } from 'src/app/services/administradores.service';
 
 @Component({
   selector: 'app-registro-usuarios-screen',
