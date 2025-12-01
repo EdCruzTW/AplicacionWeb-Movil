@@ -56,14 +56,14 @@
 
       <mat-form-field class="mat-input mat-hint-margin" appearance="outline">
         <mat-label>CURP</mat-label>
-        <input matInput maxlength="18" [(ngModel)]="alumno.curp" placeholder="Escribe CURP" style="text-transform: uppercase;">
+        <input matInput maxlength="18" [(ngModel)]="alumno.curp" placeholder="Escribe CURP" style="text-transform: uppercase;" (input)="alumno.curp = alumno.curp.toUpperCase()">
         <mat-hint align="end">{{alumno.curp?.length || 0}}/18</mat-hint>
       </mat-form-field>
       <div *ngIf="errors.curp" class="invalid-feedback">{{ errors.curp }}</div>
 
       <mat-form-field class="mat-input mat-hint-margin" appearance="outline">
           <mat-label>RFC</mat-label>
-          <input matInput minlength="12" maxlength="13" [(ngModel)]="alumno.rfc" placeholder="Escribe RFC" style="text-transform: uppercase;">
+          <input matInput minlength="12" maxlength="13" [(ngModel)]="alumno.rfc" placeholder="Escribe RFC" style="text-transform: uppercase;" (input)="alumno.rfc = alumno.rfc.toUpperCase()">
           <mat-hint align="end">{{alumno.rfc?.length || 0}}/13</mat-hint>
       </mat-form-field>
       <div *ngIf="errors.rfc" class="invalid-feedback">{{ errors.rfc }}</div>
