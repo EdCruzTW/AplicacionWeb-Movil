@@ -16,11 +16,11 @@ export class GraficasScreenComponent implements OnInit{
 
   //Histograma
   lineChartData = {
-    labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    labels: ["Administradores", "Maestros", "Alumnos"],
     datasets: [
       {
-        data:[89, 34, 43, 54, 28, 74, 93],
-        label: 'Registro de materias',
+        data:[0, 0, 0],
+        label: 'Total de usuarios',
         backgroundColor: '#F88406'
       }
     ]
@@ -32,17 +32,15 @@ export class GraficasScreenComponent implements OnInit{
 
   //Barras
   barChartData = {
-    labels: ["Congreso", "FePro", "Presentación Doctoral", "Feria Matemáticas", "T-System"],
+    labels: ["Administradores", "Maestros", "Alumnos"],
     datasets: [
       {
-        data:[34, 43, 54, 28, 74],
-        label: 'Eventos Académicos',
+        data:[0, 0, 0],
+        label: 'Total de usuarios',
         backgroundColor: [
           '#F88406',
           '#FCFF44',
-          '#82D3FB',
-          '#FB82F5',
-          '#2AD84A'
+          '#82D3FB'
         ]
       }
     ]
@@ -57,8 +55,8 @@ export class GraficasScreenComponent implements OnInit{
     labels: ["Administradores", "Maestros", "Alumnos"],
     datasets: [
       {
-        data:[89, 34, 43],
-        label: 'Registro de usuarios',
+        data:[0, 0, 0],
+        label: 'Total de usuarios',
         backgroundColor: [
           '#FCFF44',
           '#F1C8F2',
@@ -77,8 +75,8 @@ export class GraficasScreenComponent implements OnInit{
     labels: ["Administradores", "Maestros", "Alumnos"],
     datasets: [
       {
-        data:[89, 34, 43],
-        label: 'Registro de usuarios',
+        data:[0, 0, 0],
+        label: 'Total de usuarios',
         backgroundColor: [
           '#F88406',
           '#FCFF44',
@@ -106,9 +104,36 @@ export class GraficasScreenComponent implements OnInit{
       (response)=>{
         this.total_user = response;
         console.log("Total usuarios: ", this.total_user);
+
+        // Actualizar datos de las 4 gráficas dinámicamente
+        const datosUsuarios = [response.admins, response.maestros, response.alumnos];
+
+        // Histograma - reasignar objeto completo para que detecte el cambio
+        this.lineChartData = {
+          ...this.lineChartData,
+          datasets: [{ ...this.lineChartData.datasets[0], data: datosUsuarios }]
+        };
+
+        // Barras
+        this.barChartData = {
+          ...this.barChartData,
+          datasets: [{ ...this.barChartData.datasets[0], data: datosUsuarios }]
+        };
+
+        // Circular
+        this.pieChartData = {
+          ...this.pieChartData,
+          datasets: [{ ...this.pieChartData.datasets[0], data: datosUsuarios }]
+        };
+
+        // Dona
+        this.doughnutChartData = {
+          ...this.doughnutChartData,
+          datasets: [{ ...this.doughnutChartData.datasets[0], data: datosUsuarios }]
+        };
+
       }, (error)=>{
         console.log("Error al obtener total de usuarios ", error);
-
         alert("No se pudo obtener el total de cada rol de usuarios");
       }
     );
