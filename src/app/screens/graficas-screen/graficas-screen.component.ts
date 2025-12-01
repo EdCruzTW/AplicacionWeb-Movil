@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { BaseChartDirective } from 'ng2-charts';
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
 import { AdministradoresService } from 'src/app/services/administradores.service';
 
@@ -9,7 +10,9 @@ import { AdministradoresService } from 'src/app/services/administradores.service
 })
 export class GraficasScreenComponent implements OnInit{
 
-  //Agregar chartjs-plugin-datalabels
+  // Referencia a todas las gráficas del template
+  @ViewChildren(BaseChartDirective) charts?: QueryList<BaseChartDirective>;
+
   //Variables
 
   public total_user: any = {};
@@ -108,29 +111,14 @@ export class GraficasScreenComponent implements OnInit{
         // Actualizar datos de las 4 gráficas dinámicamente
         const datosUsuarios = [response.admins, response.maestros, response.alumnos];
 
-        // Histograma - reasignar objeto completo para que detecte el cambio
-        this.lineChartData = {
-          ...this.lineChartData,
-          datasets: [{ ...this.lineChartData.datasets[0], data: datosUsuarios }]
-        };
+        // Asignar datos a cada gráfica
+        this.lineChartData.datasets[0].data = datosUsuarios;
+        this.barChartData.datasets[0].data = datosUsuarios;
+        this.pieChartData.datasets[0].data = datosUsuarios;
+        this.doughnutChartData.datasets[0].data = datosUsuarios;
 
-        // Barras
-        this.barChartData = {
-          ...this.barChartData,
-          datasets: [{ ...this.barChartData.datasets[0], data: datosUsuarios }]
-        };
-
-        // Circular
-        this.pieChartData = {
-          ...this.pieChartData,
-          datasets: [{ ...this.pieChartData.datasets[0], data: datosUsuarios }]
-        };
-
-        // Dona
-        this.doughnutChartData = {
-          ...this.doughnutChartData,
-          datasets: [{ ...this.doughnutChartData.datasets[0], data: datosUsuarios }]
-        };
+        // Actualizar todas las gráficas con ViewChildren
+        this.charts?.forEach(chart => chart.update());
 
       }, (error)=>{
         console.log("Error al obtener total de usuarios ", error);
