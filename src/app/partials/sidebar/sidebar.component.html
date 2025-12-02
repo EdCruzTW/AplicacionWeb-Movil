@@ -49,13 +49,6 @@
           <mat-icon>add_circle</mat-icon>
           <span>Registrar Materia</span>
         </li>
-
-        <!-- Eventos Académicos - Available for administrators and teachers -->
-        <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
-          class="eventos-academicos" (click)="closeSidebar()">
-          <mat-icon>event</mat-icon>
-          <span>Eventos Académicos</span>
-        </li>
       </ul>
       <button mat-flat-button color="warn" class="logout-btn" (click)="logout()">
         <mat-icon>logout</mat-icon>

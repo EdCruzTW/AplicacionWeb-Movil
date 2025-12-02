@@ -39,11 +39,6 @@
           <span>Lista Materias</span>
         </button>
       </mat-menu>
-      <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
-        class="scoop-navbar-item">
-        <span class="material-icons">event</span>
-        <span>Eventos Académicos</span>
-      </li>
     </ul>
     <button class="scoop-logout-btn" (click)="logout()">
       <span class="material-icons">logout</span>
@@ -112,11 +107,6 @@
             <span>Lista Materias</span>
           </li>
         </ul>
-        <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
-          class="scoop-navbar-item" (click)="closeSidebar()">
-          <span class="material-icons">event</span>
-          <span>Eventos Académicos</span>
-        </li>
       </ul>
       <button class="scoop-logout-btn" (click)="logout(); closeSidebar()">
         <span class="material-icons">logout</span>
