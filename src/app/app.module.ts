@@ -29,6 +29,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSortModule} from '@angular/material/sort';
+import {MatMenuModule} from '@angular/material/menu';
 
 // Paginación
 import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
@@ -40,6 +41,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { CookieService } from 'ngx-cookie-service';
 // Modulo para las gráficas
 import { NgChartsModule } from 'ng2-charts';
+// Modulo para el TimePicker con reloj circular
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 // Third Party Modules
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
@@ -51,6 +54,9 @@ import { NavbarUserComponent } from './partials/navbar-user/navbar-user.componen
 import { SidebarComponent } from './partials/sidebar/sidebar.component';
 import { EliminarUserModalComponent } from './modals/eliminar-user-modal/eliminar-user-modal.component';
 import { GraficasScreenComponent } from './screens/graficas-screen/graficas-screen.component';
+import { RegistroMateriasComponent } from './screens/registro-materias/registro-materias.component';
+import { MateriasScreenComponent } from './screens/materias-screen/materias-screen.component';
+import { EditarMateriaModalComponent } from './modals/editar-materia-modal/editar-materia-modal.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +75,10 @@ import { GraficasScreenComponent } from './screens/graficas-screen/graficas-scre
     NavbarUserComponent,
     SidebarComponent,
     EliminarUserModalComponent,
-    GraficasScreenComponent
+    GraficasScreenComponent,
+    RegistroMateriasComponent,
+    MateriasScreenComponent,
+    EditarMateriaModalComponent
   ],
   imports: [
     BrowserModule,
@@ -94,7 +103,9 @@ import { GraficasScreenComponent } from './screens/graficas-screen/graficas-scre
     MatSortModule,
     MatSidenavModule,
     MatDialogModule,
-    NgChartsModule
+    MatMenuModule,
+    NgChartsModule,
+    NgxMaterialTimepickerModule
   ],
   providers: [
     CookieService,

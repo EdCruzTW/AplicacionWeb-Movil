@@ -38,6 +38,18 @@
           <span>Gráficas</span>
         </li>
 
+        <!-- Lista de Materias - Available for administrators and teachers -->
+        <li *ngIf="canSeeTeacherItems()" routerLink="/materias" routerLinkActive="active" (click)="closeSidebar()">
+          <mat-icon>menu_book</mat-icon>
+          <span>Lista de Materias</span>
+        </li>
+
+        <!-- Registro de Materias - Only for administrators -->
+        <li *ngIf="canSeeAdminItems()" routerLink="/registro-materias" routerLinkActive="active" (click)="closeSidebar()">
+          <mat-icon>add_circle</mat-icon>
+          <span>Registrar Materia</span>
+        </li>
+
         <!-- Eventos Académicos - Available for administrators and teachers -->
         <li *ngIf="canSeeTeacherItems()" routerLink="/eventos-academicos" routerLinkActive="active"
           class="eventos-academicos" (click)="closeSidebar()">

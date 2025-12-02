@@ -1,0 +1,124 @@
+<div class="wrapper main-content-materias">
+  <div class="header-home-materias">
+  </div>
+  <div class="body-materias">
+    <!-- Encabezado con los títulos de bienvenida y rol del usuario -->
+    <div class="row mt-5 mb-5">
+      <div class="col-12">
+        <span class="title-perfil">Bienvenido {{name_user}}</span>
+        <br>
+        <span class="title-perfil">{{rol}}</span>
+      </div>
+    </div>
+    <!-- Contenedor para la tabla de materias -->
+    <div class="container">
+      <div class="row mt-3 mb-5" style="text-align: center;">
+        <div class="col-12">
+          <div class="alert alert-primary" role="alert">
+            <span class="title-table">Lista de materias registradas</span>
+          </div>
+        </div>
+        <!-- Colocamos la tabla de materias -->
+        <ng-container *ngIf="lista_materias.length > 0; else noData">
+          <!-- Campo de búsqueda/filtrado -->
+          <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 20px;">
+            <mat-label>Buscar por NRC o Nombre</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ej. 123456" #input>
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <div class="table-scroll-wrapper">
+            <div class="mat-elevation-z8">
+              <table mat-table [dataSource]="dataSource" matSort style="min-width: 1200px; width: 100%;">
+                <!-- NRC Column -->
+                <ng-container matColumnDef="nrc">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> NRC </th>
+                  <td mat-cell *matCellDef="let element"> {{element.nrc}} </td>
+                </ng-container>
+
+                <!-- Nombre Column -->
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                  <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+                </ng-container>
+
+                <!-- Seccion Column -->
+                <ng-container matColumnDef="seccion">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Sección </th>
+                  <td mat-cell *matCellDef="let element"> {{element.seccion}} </td>
+                </ng-container>
+
+                <!-- Dias Column -->
+                <ng-container matColumnDef="dias">
+                  <th mat-header-cell *matHeaderCellDef> Días </th>
+                  <td mat-cell *matCellDef="let element"> {{element.dias_str}} </td>
+                </ng-container>
+
+                <!-- Horario Column -->
+                <ng-container matColumnDef="horario">
+                  <th mat-header-cell *matHeaderCellDef> Horario </th>
+                  <td mat-cell *matCellDef="let element"> {{element.hora_inicio}} - {{element.hora_fin}} </td>
+                </ng-container>
+
+                <!-- Salon Column -->
+                <ng-container matColumnDef="salon">
+                  <th mat-header-cell *matHeaderCellDef> Salón </th>
+                  <td mat-cell *matCellDef="let element"> {{element.salon}} </td>
+                </ng-container>
+
+                <!-- Programa Educativo Column -->
+                <ng-container matColumnDef="programa_educativo">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Programa Educativo </th>
+                  <td mat-cell *matCellDef="let element"> {{element.programa_educativo}} </td>
+                </ng-container>
+
+                <!-- Profesor Column -->
+                <ng-container matColumnDef="profesor">
+                  <th mat-header-cell *matHeaderCellDef> Profesor </th>
+                  <td mat-cell *matCellDef="let element"> {{element.profesor_nombre}} </td>
+                </ng-container>
+
+                <!-- Creditos Column -->
+                <ng-container matColumnDef="creditos">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Créditos </th>
+                  <td mat-cell *matCellDef="let element"> {{element.creditos}} </td>
+                </ng-container>
+
+                <!-- Editar Column (Solo Admin) -->
+                <ng-container matColumnDef="editar">
+                  <th mat-header-cell *matHeaderCellDef> Actualizar </th>
+                  <td mat-cell *matCellDef="let element" class="td-editar">
+                    <i class="bi bi-pencil-square" (click)="goEditar(element.id)"></i>
+                  </td>
+                </ng-container>
+
+                <!-- Eliminar Column (Solo Admin) -->
+                <ng-container matColumnDef="eliminar">
+                  <th mat-header-cell *matHeaderCellDef> Eliminar </th>
+                  <td mat-cell *matCellDef="let element" class="td-eliminar">
+                    <i class="bi bi-trash3-fill" (click)="delete(element.id)"></i>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+            <!-- Colocamos la paginación de la tabla -->
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+              aria-label="Seleccionar página de materias" style="min-width: 1200px; width: 100%;">
+            </mat-paginator>
+          </div>
+        </ng-container>
+        <ng-template #noData>
+          <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+              <span class="title-table">No hay materias registradas.</span>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+

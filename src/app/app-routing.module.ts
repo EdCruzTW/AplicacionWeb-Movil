@@ -9,6 +9,8 @@ import { HomeScreenComponent } from './screens/home-screen/home-screen.component
 import { MaestrosScreenComponent } from './screens/maestros-screen/maestros-screen.component';
 import { AdminScreenComponent } from './screens/admin-screen/admin-screen.component';
 import { GraficasScreenComponent } from './screens/graficas-screen/graficas-screen.component';
+import { MateriasScreenComponent } from './screens/materias-screen/materias-screen.component';
+import { RegistroMateriasComponent } from './screens/registro-materias/registro-materias.component';
 
 const routes: Routes = [
   {
@@ -29,7 +31,10 @@ const routes: Routes = [
       { path: 'administrador', component: AdminScreenComponent }, // Keep legacy route
       { path: 'alumnos', component: AlumnosScreenComponent },
       { path: 'maestros', component: MaestrosScreenComponent },
-      { path: 'graficas', component: GraficasScreenComponent }
+      { path: 'graficas', component: GraficasScreenComponent },
+      { path: 'materias', component: MateriasScreenComponent },
+      { path: 'registro-materias', component: RegistroMateriasComponent },
+      { path: 'registro-materias/:id', component: RegistroMateriasComponent }
     ]
   },
   // fallback route

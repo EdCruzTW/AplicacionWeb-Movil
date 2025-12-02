@@ -1,0 +1,97 @@
+.wrapper {
+  padding: 5px;
+}
+
+//Estilo para quitar margenes al mat dialog
+::ng-deep .mat-dialog-container {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.body-modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.icon-close {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.bi-x-lg {
+  color: #E84150 !important;
+  font-size: 18px !important;
+}
+
+.title-modal {
+  text-align: center;
+  font-family: Nexa-Bold;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: -0.72px;
+  color: #406779;
+  opacity: 1;
+}
+
+.descripcion {
+  text-align: center;
+  font-family: Nexa;
+  font-size: 16px;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+  margin-bottom: 20px;
+}
+
+.buttons-modal {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  gap: 20px;
+}
+
+.btn-cancelar {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 120px;
+  height: 40px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  color: #333;
+  font-family: Nexa-Bold;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-cancelar:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-editar {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 120px;
+  height: 40px;
+  background: #E84150 0% 0% no-repeat padding-box;
+  border: none;
+  border-radius: 5px;
+  color: #FFFFFF;
+  font-family: Nexa-Bold;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-editar:hover {
+  background-color: #d13545;
+}
